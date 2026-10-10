@@ -333,6 +333,18 @@
   .stat-card .label{font-size:11.5px;color:var(--ink-faint);font-weight:700;text-transform:uppercase;letter-spacing:.06em;}
   .stat-card .value{font-family:var(--font-mono);font-size:26px;margin-top:4px;}
 
+  /* elected members */
+  .elected-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;}
+  .elected-party{border:1px solid var(--line);border-radius:9px;padding:12px 14px;background:var(--bg-sunken);}
+  .elected-party-head{display:flex;align-items:center;gap:7px;margin-bottom:9px;}
+  .elected-party-name{font-size:12.5px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .elected-party-count{font-size:11px;color:var(--ink-faint);font-weight:600;white-space:nowrap;}
+  .elected-member{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:5px 0;border-top:1px dotted var(--line);}
+  .elected-member:first-of-type{border-top:none;}
+  .elected-name{color:var(--ink);min-width:0;}
+  .elected-votes{color:var(--ink-soft);white-space:nowrap;font-size:12px;}
+  .elected-votes .n{color:var(--ink-faint);font-size:10.5px;}
+
   footer.foot{
     margin-top:34px;padding-top:18px;border-top:1px solid var(--line);
     color:var(--ink-faint);font-size:12px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
@@ -422,13 +434,13 @@
   </div>
 
   <footer class="foot">
-    <span>Zdroj dat: Oznámení MěÚ Veselí nad Lužnicí o okrscích (23.&nbsp;9.&nbsp;2026) · výsledky ČSÚ/volby.cz, 2022 finální, 2026 průběžné dle stavu sčítání.</span>
-    <span>Vytvořeno jako interaktivní nástroj pro srovnání účasti a hlasů — chybějící okrsky 2026 lze po sečtení ručně doplnit.</span>
+    <span id="footSrc">Zdroj dat: Oznámení MěÚ Veselí nad Lužnicí o okrscích (23.&nbsp;9.&nbsp;2026) · výsledky ČSÚ/volby.cz.</span>
+    <span id="footNote">Vytvořeno jako interaktivní nástroj pro srovnání účasti a hlasů.</span>
   </footer>
 </div>
 
 <script>
-const DATA = {"meta": {"town": "Veselí nad Lužnicí", "generated2026": "2026-10-10T17:23", "counted2026": 6, "total": 7}, "town": {"y2022": {"turnout": 43.09, "final": true}, "y2026": {"turnout": 44.23, "final": false, "okrskyZprac": 6, "generated": "2026-10-10T18:56"}}, "partyMeta": {"vspm": {"label": "Veseláci a sport pro město", "color": "--p-vspm"}, "ano": {"label": "ANO 2011", "color": "--p-ano"}, "zeny": {"label": "Ženy pro město", "color": "--p-zeny"}, "kdu": {"label": "KDU-ČSL", "color": "--p-kdu"}, "vpv": {"label": "Veselí pro Veseláky", "color": "--p-vpv"}, "nestr": {"label": "Nestraníci pro Veselí n. L.", "color": "--p-nestr"}, "top09": {"label": "TOP 09", "color": "--p-top09"}, "ods": {"label": "ODS", "color": "--p-ods"}, "nc": {"label": "Naše Česko", "color": "--p-nc"}}, "districts": {"1": {"group": "I", "place": "MŠ III, Pod Markem č.p. 532", "streets": ["adresy mimo ulici", "K Zastávce", "Na Slepičáku", "P. Voka", "Pod Markem", "U Lužnice"], "y2022": {"turnout": 30.36, "final": true, "parties": [{"id": "ano", "votes": 859, "pct": 25.45}, {"id": "vspm", "votes": 696, "pct": 20.62}, {"id": "vpv", "votes": 502, "pct": 14.87}, {"id": "zeny", "votes": 433, "pct": 12.82}, {"id": "nestr", "votes": 300, "pct": 8.88}, {"id": "ods", "votes": 243, "pct": 7.2}, {"id": "kdu", "votes": 228, "pct": 6.75}, {"id": "top09", "votes": 114, "pct": 3.37}]}, "y2026": {"turnout": 31.04, "final": true, "parties": [{"id": "vspm", "votes": 969, "pct": 28.92}, {"id": "ano", "votes": 575, "pct": 17.16}, {"id": "zeny", "votes": 371, "pct": 11.07}, {"id": "vpv", "votes": 361, "pct": 10.77}, {"id": "nestr", "votes": 355, "pct": 10.59}, {"id": "nc", "votes": 343, "pct": 10.23}, {"id": "kdu", "votes": 270, "pct": 8.05}, {"id": "top09", "votes": 106, "pct": 3.16}]}}, "2": {"group": "I", "place": "MŠ III, Pod Markem č.p. 532", "streets": ["adresy mimo ulici", "5. května", "A. Jiráska", "Ak. Bydžovského", "Budějovická", "Hřbitovní", "Pod Markem", "Podskalí"], "y2022": {"turnout": 41.97, "final": true, "parties": [{"id": "vspm", "votes": 1333, "pct": 23.97}, {"id": "ano", "votes": 918, "pct": 16.51}, {"id": "kdu", "votes": 795, "pct": 14.29}, {"id": "vpv", "votes": 690, "pct": 12.41}, {"id": "zeny", "votes": 655, "pct": 11.78}, {"id": "nestr", "votes": 445, "pct": 8.0}, {"id": "ods", "votes": 420, "pct": 7.55}, {"id": "top09", "votes": 304, "pct": 5.46}]}, "y2026": {"turnout": 39.0, "final": true, "parties": [{"id": "vspm", "votes": 1222, "pct": 24.16}, {"id": "zeny", "votes": 816, "pct": 16.13}, {"id": "kdu", "votes": 728, "pct": 14.39}, {"id": "nc", "votes": 651, "pct": 12.87}, {"id": "nestr", "votes": 453, "pct": 8.95}, {"id": "vpv", "votes": 450, "pct": 8.9}, {"id": "ano", "votes": 387, "pct": 7.65}, {"id": "top09", "votes": 349, "pct": 6.9}]}}, "3": {"group": "I", "place": "MŠ I, Blatské sídliště č.p. 570", "streets": ["adresa mimo ulici", "Blatská", "Blatské sídliště", "Budějovická", "Hlinice", "Krátká", "Na Kapradí", "Na Potoce", "Na Skalce", "Na Strážkách", "Nad Chmelnicí", "náměstí T. G. Masaryka", "Nová", "Pod Vodojemem", "Podhájek", "Polní", "Průběžná", "Sokolská", "Svinenská", "Třída Čs. armády (Veselí I)", "V. Filípka", "Větrná", "Weisova", "Zahradní"], "y2022": {"turnout": 50.93, "final": true, "parties": [{"id": "vspm", "votes": 3172, "pct": 34.53}, {"id": "ano", "votes": 1293, "pct": 14.07}, {"id": "zeny", "votes": 1046, "pct": 11.38}, {"id": "ods", "votes": 901, "pct": 9.8}, {"id": "kdu", "votes": 893, "pct": 9.72}, {"id": "vpv", "votes": 782, "pct": 8.51}, {"id": "top09", "votes": 572, "pct": 6.22}, {"id": "nestr", "votes": 527, "pct": 5.73}]}, "y2026": {"turnout": 52.56, "final": true, "parties": [{"id": "vspm", "votes": 3150, "pct": 33.33}, {"id": "zeny", "votes": 1489, "pct": 15.75}, {"id": "nc", "votes": 1213, "pct": 12.83}, {"id": "ano", "votes": 1021, "pct": 10.8}, {"id": "kdu", "votes": 976, "pct": 10.32}, {"id": "top09", "votes": 608, "pct": 6.43}, {"id": "nestr", "votes": 596, "pct": 6.3}, {"id": "vpv", "votes": 397, "pct": 4.2}]}}, "4": {"group": "I", "place": "MěÚ, náměstí T. G. Masaryka č.p. 26", "streets": ["adresy mimo ulici", "Blatské sídliště", "náměstí T. G. Masaryka", "Hamerská", "Štěpnice"], "y2022": {"turnout": 40.06, "final": true, "parties": [{"id": "vspm", "votes": 2349, "pct": 34.38}, {"id": "ano", "votes": 1150, "pct": 16.83}, {"id": "vpv", "votes": 926, "pct": 13.55}, {"id": "kdu", "votes": 658, "pct": 9.63}, {"id": "zeny", "votes": 646, "pct": 9.45}, {"id": "ods", "votes": 551, "pct": 8.06}, {"id": "nestr", "votes": 366, "pct": 5.35}, {"id": "top09", "votes": 186, "pct": 2.72}]}, "y2026": {"turnout": null, "final": false, "parties": []}}, "5": {"group": "II", "place": "Dům s pečovatelskou službou, Třída Čs. armády č.p. 835", "streets": ["Alešovo nábřeží", "F. Líbala", "Foglarovo nábřeží", "Hlobilova", "Husova", "J. Lady", "Jateční", "Jindřichohradecká", "Jungmannova", "K Trati", "Karla IV.", "Krkavec", "Malé náměstí", "Mánesova", "Maredova", "Na Pískách", "P. Brandla", "Pod Dehetníkem", "Roháčova", "Říční", "Smetanova", "Třída Čs. armády (Veselí II)", "U Družstva", "U Vodárny", "V. Slukova", "Za Slabých", "Žižkova"], "y2022": {"turnout": 46.94, "final": true, "parties": [{"id": "vspm", "votes": 2621, "pct": 33.06}, {"id": "ano", "votes": 1712, "pct": 21.59}, {"id": "vpv", "votes": 830, "pct": 10.47}, {"id": "nestr", "votes": 689, "pct": 8.69}, {"id": "kdu", "votes": 677, "pct": 8.54}, {"id": "zeny", "votes": 605, "pct": 7.63}, {"id": "ods", "votes": 430, "pct": 5.42}, {"id": "top09", "votes": 363, "pct": 4.57}]}, "y2026": {"turnout": 48.15, "final": true, "parties": [{"id": "vspm", "votes": 3078, "pct": 37.61}, {"id": "ano", "votes": 1482, "pct": 18.11}, {"id": "nc", "votes": 965, "pct": 11.79}, {"id": "kdu", "votes": 664, "pct": 8.11}, {"id": "nestr", "votes": 638, "pct": 7.79}, {"id": "zeny", "votes": 541, "pct": 6.61}, {"id": "vpv", "votes": 459, "pct": 5.6}, {"id": "top09", "votes": 355, "pct": 4.33}]}}, "6": {"group": "II", "place": "MŠ II, Třída Čs. armády č.p. 308", "streets": ["adresy mimo ulici", "B. Jablonského", "Čtvrť J. Hybeše", "Erbenova", "Havlíčkova", "Hrubínova", "J. K. Tyla", "J. V. Sládka", "K. Čapka", "K. H. Máchy", "Klobasná", "Krále Jiřího", "Kubatova", "Maredova", "M. Krškové", "Na Pasekách", "Nádražní", "Nerudova", "Pod Rafandou", "Průmyslová", "Riegrova", "S. Čecha", "Samota", "Svojsíkova", "Třída Čs. armády (Veselí II)", "U Přejezdu", "Vrchlického", "Zlukovská"], "y2022": {"turnout": 42.59, "final": true, "parties": [{"id": "vspm", "votes": 2016, "pct": 28.27}, {"id": "ano", "votes": 1338, "pct": 18.76}, {"id": "ods", "votes": 973, "pct": 13.64}, {"id": "zeny", "votes": 697, "pct": 9.77}, {"id": "top09", "votes": 603, "pct": 8.45}, {"id": "vpv", "votes": 553, "pct": 7.75}, {"id": "nestr", "votes": 544, "pct": 7.62}, {"id": "kdu", "votes": 406, "pct": 5.69}]}, "y2026": {"turnout": 43.64, "final": true, "parties": [{"id": "vspm", "votes": 2342, "pct": 33.14}, {"id": "nc", "votes": 1338, "pct": 18.93}, {"id": "ano", "votes": 1027, "pct": 14.53}, {"id": "zeny", "votes": 834, "pct": 11.8}, {"id": "vpv", "votes": 413, "pct": 5.84}, {"id": "nestr", "votes": 404, "pct": 5.71}, {"id": "kdu", "votes": 365, "pct": 5.16}, {"id": "top09", "votes": 342, "pct": 4.84}]}}, "7": {"group": "Horusice", "place": "MŠ Horusice č.p. 58", "streets": ["Horusice (celá místní část)"], "y2022": {"turnout": 47.01, "final": true, "parties": [{"id": "ano", "votes": 517, "pct": 39.64}, {"id": "vspm", "votes": 414, "pct": 31.74}, {"id": "zeny", "votes": 171, "pct": 13.11}, {"id": "vpv", "votes": 107, "pct": 8.2}, {"id": "nestr", "votes": 36, "pct": 2.76}, {"id": "kdu", "votes": 28, "pct": 2.14}, {"id": "top09", "votes": 17, "pct": 1.3}, {"id": "ods", "votes": 14, "pct": 1.07}]}, "y2026": {"turnout": 45.39, "final": true, "parties": [{"id": "ano", "votes": 429, "pct": 33.12}, {"id": "vspm", "votes": 362, "pct": 27.95}, {"id": "zeny", "votes": 234, "pct": 18.06}, {"id": "vpv", "votes": 126, "pct": 9.72}, {"id": "nc", "votes": 116, "pct": 8.95}, {"id": "kdu", "votes": 14, "pct": 1.08}, {"id": "nestr", "votes": 7, "pct": 0.54}, {"id": "top09", "votes": 7, "pct": 0.54}]}}}};
+const DATA = {"meta": {"town": "Veselí nad Lužnicí", "counted2026": 7, "total": 7}, "town": {"y2022": {"turnout": 43.09, "final": true}, "y2026": {"turnout": 42.96, "final": true, "okrskyZprac": 7}}, "partyMeta": {"vspm": {"label": "Veseláci a sport pro město", "color": "--p-vspm"}, "ano": {"label": "ANO 2011", "color": "--p-ano"}, "zeny": {"label": "Ženy pro město", "color": "--p-zeny"}, "kdu": {"label": "KDU-ČSL", "color": "--p-kdu"}, "vpv": {"label": "Veselí pro Veseláky", "color": "--p-vpv"}, "nestr": {"label": "Nestraníci pro Veselí n. L.", "color": "--p-nestr"}, "top09": {"label": "TOP 09", "color": "--p-top09"}, "ods": {"label": "ODS", "color": "--p-ods"}, "nc": {"label": "Naše Česko", "color": "--p-nc"}}, "districts": {"1": {"group": "I", "place": "MŠ III, Pod Markem č.p. 532", "streets": ["adresy mimo ulici", "K Zastávce", "Na Slepičáku", "P. Voka", "Pod Markem", "U Lužnice"], "y2022": {"turnout": 30.36, "final": true, "parties": [{"id": "ano", "votes": 859, "pct": 25.45}, {"id": "vspm", "votes": 696, "pct": 20.62}, {"id": "vpv", "votes": 502, "pct": 14.87}, {"id": "zeny", "votes": 433, "pct": 12.82}, {"id": "nestr", "votes": 300, "pct": 8.88}, {"id": "ods", "votes": 243, "pct": 7.2}, {"id": "kdu", "votes": 228, "pct": 6.75}, {"id": "top09", "votes": 114, "pct": 3.37}]}, "y2026": {"turnout": 31.04, "final": true, "parties": [{"id": "vspm", "votes": 969, "pct": 28.92}, {"id": "ano", "votes": 575, "pct": 17.16}, {"id": "zeny", "votes": 371, "pct": 11.07}, {"id": "vpv", "votes": 361, "pct": 10.77}, {"id": "nestr", "votes": 355, "pct": 10.59}, {"id": "nc", "votes": 343, "pct": 10.23}, {"id": "kdu", "votes": 270, "pct": 8.05}, {"id": "top09", "votes": 106, "pct": 3.16}]}}, "2": {"group": "I", "place": "MŠ III, Pod Markem č.p. 532", "streets": ["adresy mimo ulici", "5. května", "A. Jiráska", "Ak. Bydžovského", "Budějovická", "Hřbitovní", "Pod Markem", "Podskalí"], "y2022": {"turnout": 41.97, "final": true, "parties": [{"id": "vspm", "votes": 1333, "pct": 23.97}, {"id": "ano", "votes": 918, "pct": 16.51}, {"id": "kdu", "votes": 795, "pct": 14.29}, {"id": "vpv", "votes": 690, "pct": 12.41}, {"id": "zeny", "votes": 655, "pct": 11.78}, {"id": "nestr", "votes": 445, "pct": 8.0}, {"id": "ods", "votes": 420, "pct": 7.55}, {"id": "top09", "votes": 304, "pct": 5.46}]}, "y2026": {"turnout": 39.0, "final": true, "parties": [{"id": "vspm", "votes": 1222, "pct": 24.16}, {"id": "zeny", "votes": 816, "pct": 16.13}, {"id": "kdu", "votes": 728, "pct": 14.39}, {"id": "nc", "votes": 651, "pct": 12.87}, {"id": "nestr", "votes": 453, "pct": 8.95}, {"id": "vpv", "votes": 450, "pct": 8.9}, {"id": "ano", "votes": 387, "pct": 7.65}, {"id": "top09", "votes": 349, "pct": 6.9}]}}, "3": {"group": "I", "place": "MŠ I, Blatské sídliště č.p. 570", "streets": ["adresa mimo ulici", "Blatská", "Blatské sídliště", "Budějovická", "Hlinice", "Krátká", "Na Kapradí", "Na Potoce", "Na Skalce", "Na Strážkách", "Nad Chmelnicí", "náměstí T. G. Masaryka", "Nová", "Pod Vodojemem", "Podhájek", "Polní", "Průběžná", "Sokolská", "Svinenská", "Třída Čs. armády (Veselí I)", "V. Filípka", "Větrná", "Weisova", "Zahradní"], "y2022": {"turnout": 50.93, "final": true, "parties": [{"id": "vspm", "votes": 3172, "pct": 34.53}, {"id": "ano", "votes": 1293, "pct": 14.07}, {"id": "zeny", "votes": 1046, "pct": 11.38}, {"id": "ods", "votes": 901, "pct": 9.8}, {"id": "kdu", "votes": 893, "pct": 9.72}, {"id": "vpv", "votes": 782, "pct": 8.51}, {"id": "top09", "votes": 572, "pct": 6.22}, {"id": "nestr", "votes": 527, "pct": 5.73}]}, "y2026": {"turnout": 52.56, "final": true, "parties": [{"id": "vspm", "votes": 3150, "pct": 33.33}, {"id": "zeny", "votes": 1489, "pct": 15.75}, {"id": "nc", "votes": 1213, "pct": 12.83}, {"id": "ano", "votes": 1021, "pct": 10.8}, {"id": "kdu", "votes": 976, "pct": 10.32}, {"id": "top09", "votes": 608, "pct": 6.43}, {"id": "nestr", "votes": 596, "pct": 6.3}, {"id": "vpv", "votes": 397, "pct": 4.2}]}}, "4": {"group": "I", "place": "MěÚ, náměstí T. G. Masaryka č.p. 26", "streets": ["adresy mimo ulici", "Blatské sídliště", "náměstí T. G. Masaryka", "Hamerská", "Štěpnice"], "y2022": {"turnout": 40.06, "final": true, "parties": [{"id": "vspm", "votes": 2349, "pct": 34.38}, {"id": "ano", "votes": 1150, "pct": 16.83}, {"id": "vpv", "votes": 926, "pct": 13.55}, {"id": "kdu", "votes": 658, "pct": 9.63}, {"id": "zeny", "votes": 646, "pct": 9.45}, {"id": "ods", "votes": 551, "pct": 8.06}, {"id": "nestr", "votes": 366, "pct": 5.35}, {"id": "top09", "votes": 186, "pct": 2.72}]}, "y2026": {"turnout": 37.25, "final": true, "parties": [{"id": "vspm", "votes": 1979, "pct": 31.54}, {"id": "nc", "votes": 1003, "pct": 15.98}, {"id": "zeny", "votes": 848, "pct": 13.51}, {"id": "ano", "votes": 840, "pct": 13.38}, {"id": "nestr", "votes": 542, "pct": 8.63}, {"id": "vpv", "votes": 467, "pct": 7.44}, {"id": "kdu", "votes": 408, "pct": 6.5}, {"id": "top09", "votes": 187, "pct": 2.98}]}}, "5": {"group": "II", "place": "Dům s pečovatelskou službou, Třída Čs. armády č.p. 835", "streets": ["Alešovo nábřeží", "F. Líbala", "Foglarovo nábřeží", "Hlobilova", "Husova", "J. Lady", "Jateční", "Jindřichohradecká", "Jungmannova", "K Trati", "Karla IV.", "Krkavec", "Malé náměstí", "Mánesova", "Maredova", "Na Pískách", "P. Brandla", "Pod Dehetníkem", "Roháčova", "Říční", "Smetanova", "Třída Čs. armády (Veselí II)", "U Družstva", "U Vodárny", "V. Slukova", "Za Slabých", "Žižkova"], "y2022": {"turnout": 46.94, "final": true, "parties": [{"id": "vspm", "votes": 2621, "pct": 33.06}, {"id": "ano", "votes": 1712, "pct": 21.59}, {"id": "vpv", "votes": 830, "pct": 10.47}, {"id": "nestr", "votes": 689, "pct": 8.69}, {"id": "kdu", "votes": 677, "pct": 8.54}, {"id": "zeny", "votes": 605, "pct": 7.63}, {"id": "ods", "votes": 430, "pct": 5.42}, {"id": "top09", "votes": 363, "pct": 4.57}]}, "y2026": {"turnout": 48.15, "final": true, "parties": [{"id": "vspm", "votes": 3078, "pct": 37.61}, {"id": "ano", "votes": 1482, "pct": 18.11}, {"id": "nc", "votes": 965, "pct": 11.79}, {"id": "kdu", "votes": 664, "pct": 8.11}, {"id": "nestr", "votes": 638, "pct": 7.79}, {"id": "zeny", "votes": 541, "pct": 6.61}, {"id": "vpv", "votes": 459, "pct": 5.6}, {"id": "top09", "votes": 355, "pct": 4.33}]}}, "6": {"group": "II", "place": "MŠ II, Třída Čs. armády č.p. 308", "streets": ["adresy mimo ulici", "B. Jablonského", "Čtvrť J. Hybeše", "Erbenova", "Havlíčkova", "Hrubínova", "J. K. Tyla", "J. V. Sládka", "K. Čapka", "K. H. Máchy", "Klobasná", "Krále Jiřího", "Kubatova", "Maredova", "M. Krškové", "Na Pasekách", "Nádražní", "Nerudova", "Pod Rafandou", "Průmyslová", "Riegrova", "S. Čecha", "Samota", "Svojsíkova", "Třída Čs. armády (Veselí II)", "U Přejezdu", "Vrchlického", "Zlukovská"], "y2022": {"turnout": 42.59, "final": true, "parties": [{"id": "vspm", "votes": 2016, "pct": 28.27}, {"id": "ano", "votes": 1338, "pct": 18.76}, {"id": "ods", "votes": 973, "pct": 13.64}, {"id": "zeny", "votes": 697, "pct": 9.77}, {"id": "top09", "votes": 603, "pct": 8.45}, {"id": "vpv", "votes": 553, "pct": 7.75}, {"id": "nestr", "votes": 544, "pct": 7.62}, {"id": "kdu", "votes": 406, "pct": 5.69}]}, "y2026": {"turnout": 43.64, "final": true, "parties": [{"id": "vspm", "votes": 2342, "pct": 33.14}, {"id": "nc", "votes": 1338, "pct": 18.93}, {"id": "ano", "votes": 1027, "pct": 14.53}, {"id": "zeny", "votes": 834, "pct": 11.8}, {"id": "vpv", "votes": 413, "pct": 5.84}, {"id": "nestr", "votes": 404, "pct": 5.71}, {"id": "kdu", "votes": 365, "pct": 5.16}, {"id": "top09", "votes": 342, "pct": 4.84}]}}, "7": {"group": "Horusice", "place": "MŠ Horusice č.p. 58", "streets": ["Horusice (celá místní část)"], "y2022": {"turnout": 47.01, "final": true, "parties": [{"id": "ano", "votes": 517, "pct": 39.64}, {"id": "vspm", "votes": 414, "pct": 31.74}, {"id": "zeny", "votes": 171, "pct": 13.11}, {"id": "vpv", "votes": 107, "pct": 8.2}, {"id": "nestr", "votes": 36, "pct": 2.76}, {"id": "kdu", "votes": 28, "pct": 2.14}, {"id": "top09", "votes": 17, "pct": 1.3}, {"id": "ods", "votes": 14, "pct": 1.07}]}, "y2026": {"turnout": 45.39, "final": true, "parties": [{"id": "ano", "votes": 429, "pct": 33.12}, {"id": "vspm", "votes": 362, "pct": 27.95}, {"id": "zeny", "votes": 234, "pct": 18.06}, {"id": "vpv", "votes": 126, "pct": 9.72}, {"id": "nc", "votes": 116, "pct": 8.95}, {"id": "kdu", "votes": 14, "pct": 1.08}, {"id": "nestr", "votes": 7, "pct": 0.54}, {"id": "top09", "votes": 7, "pct": 0.54}]}}}, "elected": [{"partyId": "vspm", "order": 1, "titlePre": "Ing.", "first": "Vít", "last": "Rada", "titlePost": "MPA", "votes": 1003, "pct": 7.65}, {"partyId": "vspm", "order": 2, "titlePre": "", "first": "Oldřich", "last": "Zimmel", "titlePost": "", "votes": 774, "pct": 5.9}, {"partyId": "vspm", "order": 7, "titlePre": "", "first": "Petr", "last": "Gruber", "titlePost": "", "votes": 715, "pct": 5.45}, {"partyId": "vspm", "order": 9, "titlePre": "", "first": "František", "last": "Podlaha", "titlePost": "", "votes": 709, "pct": 5.41}, {"partyId": "vspm", "order": 4, "titlePre": "Ing.", "first": "Radim", "last": "Farkač", "titlePost": "", "votes": 704, "pct": 5.37}, {"partyId": "vspm", "order": 6, "titlePre": "Mgr.", "first": "Miroslav", "last": "Chlistovský", "titlePost": "", "votes": 696, "pct": 5.31}, {"partyId": "vspm", "order": 5, "titlePre": "Mgr.", "first": "Tereza", "last": "Chýnová", "titlePost": "", "votes": 674, "pct": 5.14}, {"partyId": "vspm", "order": 3, "titlePre": "", "first": "Luděk Lou", "last": "Myler", "titlePost": "", "votes": 668, "pct": 5.09}, {"partyId": "zeny", "order": 3, "titlePre": "Mgr.", "first": "Jana", "last": "Ženíšková", "titlePost": "", "votes": 460, "pct": 8.96}, {"partyId": "kdu", "order": 1, "titlePre": "Mgr.", "first": "Petr", "last": "Vach", "titlePost": "", "votes": 447, "pct": 13.05}, {"partyId": "zeny", "order": 1, "titlePre": "", "first": "Irena", "last": "Havelková", "titlePost": "", "votes": 445, "pct": 8.66}, {"partyId": "nc", "order": 1, "titlePre": "Ing.", "first": "Martin", "last": "Marek", "titlePost": "", "votes": 427, "pct": 7.58}, {"partyId": "nc", "order": 12, "titlePre": "", "first": "Michal", "last": "Bláha", "titlePost": "", "votes": 414, "pct": 7.35}, {"partyId": "ano", "order": 1, "titlePre": "RNDr.", "first": "Ladislav", "last": "Sýkora", "titlePost": "", "votes": 404, "pct": 7.01}, {"partyId": "ano", "order": 2, "titlePre": "JUDr.", "first": "Petr", "last": "Šonka", "titlePost": "", "votes": 402, "pct": 6.97}, {"partyId": "zeny", "order": 4, "titlePre": "Mgr.", "first": "Hana", "last": "Mazalovská", "titlePost": "", "votes": 371, "pct": 7.22}, {"partyId": "ano", "order": 3, "titlePre": "", "first": "Radek", "last": "Jurman", "titlePost": "", "votes": 359, "pct": 6.23}, {"partyId": "nc", "order": 2, "titlePre": "MDDr.", "first": "Marek", "last": "Novotný", "titlePost": "", "votes": 353, "pct": 6.27}, {"partyId": "kdu", "order": 2, "titlePre": "Ing.", "first": "Jaroslav", "last": "Hejl", "titlePost": "", "votes": 259, "pct": 7.56}, {"partyId": "nestr", "order": 2, "titlePre": "", "first": "Radek", "last": "Doležal", "titlePost": "", "votes": 222, "pct": 7.41}, {"partyId": "vpv", "order": 1, "titlePre": "Mgr.", "first": "Jan", "last": "Mach", "titlePost": "", "votes": 219, "pct": 8.19}]};
 
 const PARTY_ORDER = Object.keys(DATA.partyMeta);
 const GROUP_NAMES = {I:'Veselí nad Lužnicí I', II:'Veselí nad Lužnicí II', Horusice:'Horusice'};
@@ -544,9 +556,10 @@ function renderLegend(){
 
 function renderMetaChips(){
   const el = document.getElementById('metaChips');
+  const y26final = !!DATA.town.y2026.final;
   el.innerHTML = `
     <span class="chip state-ok"><span class="dot"></span>2022: finální, účast ${fmtPct(DATA.town.y2022.turnout)}</span>
-    <span class="chip state-pending"><span class="dot"></span>2026: sečteno ${DATA.town.y2026.okrskyZprac ?? DATA.meta.counted2026}/${DATA.meta.total} okrsků, účast (sečteno) ${fmtPct(DATA.town.y2026.turnout)}</span>
+    <span class="chip ${y26final ? 'state-ok' : 'state-pending'}"><span class="dot"></span>2026: ${y26final ? 'finální' : `sečteno ${DATA.town.y2026.okrskyZprac ?? DATA.meta.counted2026}/${DATA.meta.total} okrsků`}, účast ${fmtPct(DATA.town.y2026.turnout)}</span>
   `;
 }
 
@@ -651,15 +664,16 @@ function renderTownDetail(){
           <div class="votes-total"><b>${fmtNum(totalVotes(parties22))}</b> odevzdaných hlasů · 7/7 okrsků</div>
         </div>
         <div class="turnout-stat y2026">
-          <div class="yr">2026 · sečteno ${DATA.town.y2026.okrskyZprac ?? DATA.meta.counted2026}/${DATA.meta.total}</div>
+          <div class="yr">2026 ${DATA.town.y2026.final ? '· finální' : `· sečteno ${DATA.town.y2026.okrskyZprac ?? DATA.meta.counted2026}/${DATA.meta.total}`}</div>
           <div class="num mono">${fmtPct(DATA.town.y2026.turnout)}</div>
           <div class="turnout-bar-track"><div class="turnout-bar-fill" style="width:${DATA.town.y2026.turnout}%"></div></div>
-          ${deltaChip(DATA.town.y2026.turnout, DATA.town.y2022.turnout,' p. b. (zatím)')}
+          ${deltaChip(DATA.town.y2026.turnout, DATA.town.y2022.turnout, DATA.town.y2026.final ? ' p. b.' : ' p. b. (zatím)')}
           <div class="votes-total"><b>${fmtNum(totalVotes(parties26))}</b> odevzdaných hlasů · ${counted.length}/7 okrsků</div>
         </div>
       </div>
     </div>
 
+    ${!DATA.town.y2026.final ? `
     <div class="section">
       <div class="banner">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 15 14.5H1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 6v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="12" r=".9" fill="currentColor"/></svg>
@@ -668,13 +682,64 @@ function renderTownDetail(){
           ČSÚ eviduje sečteno ${DATA.town.y2026.okrskyZprac ?? DATA.meta.counted2026} ze 7 okrsků (účast ${fmtPct(DATA.town.y2026.turnout)}). Podrobný rozpad po stranách zatím máme potvrzený za ${counted.length} okrsky (${counted.join(', ')})${(DATA.town.y2026.okrskyZprac ?? DATA.meta.counted2026) > counted.length ? ' — zveřejnění zbylého okrsku na úrovni okrsků mírně zpožďuje za celkovým součtem' : ''}. Součet hlasů níže zahrnuje jen potvrzené okrsky — po dopočtení zbylých se poměry ještě posunou.
         </div>
       </div>
-    </div>
+    </div>` : derivedDistrictIds().length ? `
+    <div class="section">
+      <div class="banner">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 15 14.5H1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 6v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="12" r=".9" fill="currentColor"/></svg>
+        <div>
+          <strong>Výsledky 2026 jsou finální a kompletní za celé město</strong>
+          Okrsek${derivedDistrictIds().length>1?'y':''} ${derivedDistrictIds().join(', ')} ČSÚ nezveřejnil samostatně na úrovni okrsku — čísla jsou dopočtena jako rozdíl mezi celkovým součtem za město a potvrzenými ostatními okrsky, proto u ${derivedDistrictIds().length>1?'nich':'něj'} chybí přesná volební účast v %.
+        </div>
+      </div>
+    </div>` : ''}
 
     <div class="section">
-      <div class="section-title">Hlasy pro strany a sdružení (součet sečtených okrsků)</div>
-      ${buildPartyChart(parties22,'2022 · celé město','--y22',parties26,`2026 · ${counted.length}/7 okrsků`,'--y26')}
+      <div class="section-title">Hlasy pro strany a sdružení ${DATA.town.y2026.final ? '(celé město)' : '(součet sečtených okrsků)'}</div>
+      ${buildPartyChart(parties22,'2022 · celé město','--y22',parties26,DATA.town.y2026.final ? '2026 · celé město' : `2026 · ${counted.length}/7 okrsků`,'--y26')}
     </div>
+
+    ${renderElectedSection()}
   `;
+}
+
+function derivedDistrictIds(){
+  return Object.keys(DATA.districts).filter(id => effective2026(id).derived);
+}
+
+function renderElectedSection(){
+  if(!DATA.elected || !DATA.elected.length) return '';
+  const byParty = {};
+  DATA.elected.forEach(m=>{
+    (byParty[m.partyId] = byParty[m.partyId] || []).push(m);
+  });
+  const partyIds = Object.keys(byParty).sort((a,b)=> byParty[b].length - byParty[a].length
+    || totalVotesOf(b) - totalVotesOf(a));
+  function totalVotesOf(pid){
+    return byParty[pid].reduce((s,m)=>s+m.votes,0);
+  }
+  const rows = partyIds.map(pid=>{
+    const meta = DATA.partyMeta[pid];
+    const members = byParty[pid].slice().sort((a,b)=>b.votes-a.votes);
+    const memberRows = members.map(m=>`
+      <div class="elected-member">
+        <span class="elected-name">${m.titlePre ? m.titlePre+' ' : ''}${m.first} ${m.last}${m.titlePost ? ', '+m.titlePost : ''}</span>
+        <span class="elected-votes mono">${fmtNum(m.votes)} <span class="n">(${fmtPct(m.pct)} pref.)</span></span>
+      </div>`).join('');
+    return `
+      <div class="elected-party">
+        <div class="elected-party-head">
+          <span class="legend-swatch" style="background:var(${meta.color})"></span>
+          <span class="elected-party-name">${meta.label}</span>
+          <span class="elected-party-count">${members.length} ${members.length===1?'mandát':(members.length<5?'mandáty':'mandátů')}</span>
+        </div>
+        ${memberRows}
+      </div>`;
+  }).join('');
+  return `
+    <div class="section">
+      <div class="section-title">Zvolení zastupitelé 2026 (21 míst, dle počtu preferenčních hlasů)</div>
+      <div class="elected-grid">${rows}</div>
+    </div>`;
 }
 
 /* ---------------- detail: one district ---------------- */
@@ -703,6 +768,7 @@ function renderDistrictDetail(id){
         <button class="edit-toggle" id="openEdit">✎ ${eff26.overridden ? 'Upravit zadaná data' : 'Opravit čísla'}</button>
       </div>
       ${eff26.overridden ? `<div class="banner" style="margin-bottom:10px"><div><strong>Použita ručně zadaná data</strong>Tento okrsek zobrazuje vámi upravená čísla místo stažených. <button class="linklike" id="clearOverride">Vrátit na stažená data</button></div></div>` : ''}
+      ${(!eff26.overridden && eff26.derived) ? `<div class="banner" style="margin-bottom:10px"><div><strong>Hlasy dopočteny, ne zveřejněny ČSÚ samostatně</strong>ČSÚ nezveřejnil výsledky okrsku ${id} samostatně — čísla jsou rozdíl mezi celkovým součtem za město a potvrzenými ostatními okrsky. Volební účast v % proto u tohoto okrsku chybí (neznáme počet zapsaných voličů jen za okrsek ${id}).</div></div>` : ''}
       <div class="edit-form" id="editForm" hidden></div>
     </div>`;
 
@@ -725,7 +791,7 @@ function renderDistrictDetail(id){
           <div class="votes-total"><b>${fmtNum(totalVotes(d.y2022.parties))}</b> odevzdaných hlasů</div>
         </div>
         <div class="turnout-stat y2026">
-          <div class="yr">2026 ${eff26.parties.length ? (eff26.overridden?'· ručně zadáno':'· finální') : '· čeká se'}</div>
+          <div class="yr">2026 ${eff26.parties.length ? (eff26.overridden?'· ručně zadáno':(eff26.derived?'· dopočteno':'· finální')) : '· čeká se'}</div>
           <div class="num mono">${fmtPct(eff26.turnout)}</div>
           <div class="turnout-bar-track"><div class="turnout-bar-fill" style="width:${eff26.turnout||0}%"></div></div>
           ${deltaChip(eff26.turnout, d.y2022.turnout,' p. b.')}
@@ -842,8 +908,20 @@ document.getElementById('segYear2026').addEventListener('click', ()=>{
   renderMap();
 });
 
+function renderFooter(){
+  const derived = derivedDistrictIds();
+  document.getElementById('footSrc').textContent =
+    `Zdroj dat: Oznámení MěÚ Veselí nad Lužnicí o okrscích (23. 9. 2026) · výsledky ČSÚ/volby.cz. `
+    + `2022 finální. 2026 ${DATA.town.y2026.final ? 'finální' : 'průběžné, dle stavu sčítání'}`
+    + (derived.length ? ` (okrsek ${derived.join(', ')} dopočten z celkového součtu za město)` : '') + '.';
+  document.getElementById('footNote').textContent = DATA.town.y2026.final
+    ? 'Vytvořeno jako interaktivní nástroj pro srovnání účasti, hlasů a zvolených zastupitelů mezi roky 2022 a 2026.'
+    : 'Vytvořeno jako interaktivní nástroj pro srovnání účasti a hlasů — chybějící okrsky 2026 lze po sečtení ručně doplnit.';
+}
+
 renderMetaChips();
 renderLegend();
 renderMap();
 selectTown();
+renderFooter();
 </script>

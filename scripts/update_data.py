@@ -142,20 +142,82 @@ def fetch_year(year):
 
 
 def fetch_official_town_2026():
-    """Authoritative town-wide aggregate from the Czech Statistical Office."""
+    """Authoritative town-wide aggregate (and, once final, candidate-level
+    preferential votes) from the Czech Statistical Office."""
     url = f'https://volby.gov.cz/appdata/kv2026/20261009/odata/zastup/vysledky_obec_{OBEC}.xml'
     try:
         xml = fetch(url)
     except Exception as e:
         print('  (could not reach CSU XML, falling back to district sum):', e)
         return None
-    m_proc = re.search(r'UCAST_PROC="([\d.]+)"', xml)
-    m_zprac = re.search(r'OKRSKY_ZPRAC="(\d+)"', xml)
-    m_gen = re.search(r'DATUM_CAS_GENEROVANI="([^"]+)"', xml)
-    if not (m_proc and m_zprac):
-        return None
-    return {'turnout': float(m_proc.group(1)), 'okrskyZprac': int(m_zprac.group(1)),
-            'generated': m_gen.group(1) if m_gen else None}
+
+    import xml.etree.ElementTree as ET
+    ns = {'k': 'http://www.volby.cz/kv/'}
+    root = ET.fromstring(xml)
+    obec = root.find('k:OBEC', ns)
+    vysl = obec.find('k:VYSLEDEK', ns)
+    ucast = vysl.find('k:UCAST', ns)
+
+    je_spocteno = obec.get('JE_SPOCTENO') == '1'
+    party_votes = {}
+    elected = []
+    for strana in vysl.findall('k:VOLEBNI_STRANA', ns):
+        sname = strana.get('NAZEV_STRANY')
+        party_votes[sname] = int(strana.get('HLASY'))
+        for z in strana.findall('k:ZASTUPITEL', ns):
+            elected.append({
+                'partyId': PARTY_ID.get(sname),
+                'order': int(z.get('PORADOVE_CISLO')),
+                'titlePre': z.get('TITULPRED') or '',
+                'first': z.get('JMENO'),
+                'last': z.get('PRIJMENI'),
+                'titlePost': z.get('TITULZA') or '',
+                'votes': int(z.get('HLASY')),
+                'pct': float(z.get('HLASY_PROC')),
+            })
+    elected.sort(key=lambda m: -m['votes'])
+
+    return {
+        'turnout': float(ucast.get('UCAST_PROC')),
+        'okrskyZprac': int(ucast.get('OKRSKY_ZPRAC')),
+        'final': je_spocteno,
+        'partyVotes': party_votes,  # town-wide totals, for deriving a missing district by subtraction
+        'elected': elected,
+    }
+
+
+def derive_missing_district(districts, official):
+    """If exactly one district's per-okrsek page never went final but the town
+    total is final/complete, back it out as (town total - sum of the other 6).
+    This happens when CSU finishes a town before the district-level mirror
+    (seznamzpravy) catches up on that one last okrsek."""
+    if not official or not official.get('partyVotes'):
+        return
+    missing = [n for n in districts if not districts[n]['y2026']['final']]
+    if len(missing) != 1:
+        return
+    target = missing[0]
+    others_sum = {}
+    for n, d in districts.items():
+        if n == target:
+            continue
+        for p in d['y2026']['parties']:
+            others_sum[p['id']] = others_sum.get(p['id'], 0) + p['votes']
+
+    derived = []
+    for name, total in official['partyVotes'].items():
+        pid = PARTY_ID.get(name)
+        votes = total - others_sum.get(pid, 0)
+        if votes > 0:
+            derived.append({'id': pid, 'votes': votes})
+    grand_total = sum(p['votes'] for p in derived) or 1
+    for p in derived:
+        p['pct'] = round(p['votes'] / grand_total * 100, 2)
+    derived.sort(key=lambda p: -p['votes'])
+
+    districts[target]['y2026'] = {'turnout': None, 'final': True, 'derived': True, 'parties': derived}
+    print(f'  Derived okrsek {target} by subtraction ({grand_total} votes) — '
+          f'not published separately by CSU yet.')
 
 
 def main():
@@ -173,18 +235,22 @@ def main():
             'y2026': {'turnout': y2026[n]['turnout'], 'final': y2026[n]['final'], 'parties': y2026[n]['parties']},
         }
 
-    counted2026 = sum(1 for n in districts if districts[n]['y2026']['final'])
     official = fetch_official_town_2026()
-    town2026 = {'turnout': official['turnout'] if official else None, 'final': False}
+    if official and not all(districts[n]['y2026']['final'] for n in districts):
+        derive_missing_district(districts, official)
+
+    counted2026 = sum(1 for n in districts if districts[n]['y2026']['final'])
+    town_final = bool(official and official['final'] and counted2026 == 7)
+    town2026 = {'turnout': official['turnout'] if official else None, 'final': town_final}
     if official:
         town2026['okrskyZprac'] = official['okrskyZprac']
-        town2026['generated'] = official['generated']
 
     data = {
         'meta': {'town': 'Veselí nad Lužnicí', 'counted2026': counted2026, 'total': 7},
         'town': {'y2022': {'turnout': 43.09, 'final': True}, 'y2026': town2026},
         'partyMeta': PARTY_META,
         'districts': districts,
+        'elected': official['elected'] if (official and town_final) else [],
     }
 
     index_path = ROOT / 'index.html'
@@ -195,7 +261,7 @@ def main():
         raise SystemExit('Could not find "const DATA = {...};" block in index.html')
     index_path.write_text(new_html, encoding='utf-8')
     print(f'\nUpdated {index_path} — {counted2026}/7 okrsky final for 2026'
-          + (f', CSU reports {official["okrskyZprac"]}/7' if official else ''))
+          + (f', CSU reports {official["okrskyZprac"]}/7, town final={town_final}' if official else ''))
 
 
 if __name__ == '__main__':
