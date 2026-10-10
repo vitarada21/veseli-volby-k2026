@@ -245,16 +245,29 @@ def main():
     if official:
         town2026['okrskyZprac'] = official['okrskyZprac']
 
+    index_path = ROOT / 'index.html'
+    html = index_path.read_text(encoding='utf-8')
+
+    # elected2022 is historical (CSU final results archive) and never changes -
+    # carry it forward from the page's current data rather than re-downloading
+    # the ~20MB national candidate registry on every refresh.
+    elected2022 = []
+    m_old = re.search(r'const DATA = (\{.*?\});\n', html, re.S)
+    if m_old:
+        try:
+            elected2022 = json.loads(m_old.group(1)).get('elected2022', [])
+        except json.JSONDecodeError:
+            pass
+
     data = {
         'meta': {'town': 'Veselí nad Lužnicí', 'counted2026': counted2026, 'total': 7},
         'town': {'y2022': {'turnout': 43.09, 'final': True}, 'y2026': town2026},
         'partyMeta': PARTY_META,
         'districts': districts,
-        'elected': official['elected'] if (official and town_final) else [],
+        'elected2026': official['elected'] if (official and town_final) else [],
+        'elected2022': elected2022,
     }
 
-    index_path = ROOT / 'index.html'
-    html = index_path.read_text(encoding='utf-8')
     data_js = json.dumps(data, ensure_ascii=False)
     new_html, n = re.subn(r'const DATA = \{.*?\};\n', 'const DATA = ' + data_js + ';\n', html, count=1, flags=re.S)
     if n != 1:
